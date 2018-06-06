@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app="App">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Entregas / Instalación Producción</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="bulma/css/bulma.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="bulma/css/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="bulma/css/master.css" />
+    
+</head>
+<body>
+   <cabecera>
+        <nav class="navbar is-transparent" role="navigation" aria-label="main navigation" style="border-bottom:1px solid #CFCFCF">
+                
+            <div class="navbar-brand">
+                <a class="navbar-item" href="#!">
+                <img src="img/logo.png" alt="" width="90">
+                </a>
+                <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                <span></span>
+                <span></span>
+                <span></span>
+                </div>
+            </div>
+            
+            <div id="navbarExampleTransparentExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                        Módulos
+                        </a>
+                        <div class="navbar-dropdown is-boxed">
+                            <a class="navbar-item" href="#!/instalaciones-entregas">
+                                Instalación / Entregas Producción
+                            </a>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+   </cabecera>
+   <desarrollo>
+        <div ng-view></div>
+   </desarrollo>
+   <pie></pie>
+<script src="js/angular.js"></script>    
+<script src="js/angular-route.js"></script>    
+<script src="js/jquery-1.8.3.min.js"></script>    
+<script src="js/controller.js"></script>    
+</body>
+
+</html>

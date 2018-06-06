@@ -1,0 +1,83 @@
+<body>
+    <section class="hero is-info">
+        <div class="hero-body" style="padding: 0.5rem 1.5rem;">
+            <div class="container">
+            <h1 class="title">
+                Master 
+            </h1> 
+            </div>
+        </div>
+    </section>
+
+    <div>
+        <div class="is-pulled-right" style="padding:10px 0px;">
+            <a class="button is-primary" href="#!/clientes/nuevo"><i class="fa fa-plus"></i></a>
+            <a class="button is-danger"><i class="fa fa-trash"></i></a>
+        </div>
+        
+    </div>
+    <table class="table is-fullwidth is-striped">
+        <thead class="is-light">
+            <tr class="is-light">
+            <th><abbr>#</abbr></th>
+            <th>Empresa</th>
+            <th colspan=2><abbr>Razón Social</abbr></th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr ng-if="cargando"><td colspan="6"><i class="fa fa-cog fa-spin"></i> Cargando Consulta...</td></tr>
+            <tr ng-repeat="listas in lista" class="tabla_style">
+                <td>{{ listas.id }}</td>
+                <td><u><a href="#!/clientes/{{ listas.id }}">{{ listas.empresa }}</a></u></td>
+                <td ng-repeat="item in listas.razon">
+                    <!--<div ng-repeat="item in listas.razon">-->
+                        <span class="tag is-info">
+                            {{ item.alias }}                        
+                        </span>    
+                        <br>
+                        <b>Razón Social</b>: {{ item.razon_social }}<br>
+                        {{ item.direccion }}
+                        <div ng-if="item.contacto">
+                            <span class="tag is-primary">
+                                Datos Cobranza
+                            </span>    
+                            <!--<b>Datos Cobranza</b>--><br>
+                            <div ng-if="item.contacto">{{ item.contacto }}</div>
+                            <div ng-if="item.telefono">{{ item.telefono }}</div>
+                            <div ng-if="item.celular">{{ item.celular }}</div>
+                        </div>
+                        <div ng-if="item.metodo"><b>Metodo Pago:</b> {{ item.metodo }}</div>
+                        <div ng-if="item.politica"><b>Política:</b> {{ item.politica }}</div>
+                    <!--</div>-->
+                </td>
+                
+            </tr>
+        
+            <tr ng-if="lista.lenght == 0"><td colspan="6">No se Encuentran resultados</td></tr>
+            
+        </tbody>
+    </table>
+    
+<script>
+$(document).ready(function()
+{
+    $.ajax({
+        data: {},
+        type: "GET",
+        dataType: "json",
+        url: "rest/master.php",
+    })
+     .done(function( data, textStatus, jqXHR ) {
+        console.log( "La solicitud se ha completado correctamente." );
+        //$scope.lista = data;
+        //$scope.lista = [{id:"1", empresa:"Liverpool", razon_social:"Liverpool", contacto:"Mario", metodo_pago:"Credito"}];
+        //$scope.cargando = false;
+     })
+     .fail(function( jqXHR, textStatus, errorThrown ) {
+        console.log( "La solicitud a fallado: " +  textStatus);
+       // $scope.cargando = false;
+    });
+});
+</script>
+</body>

@@ -1,0 +1,246 @@
+<body>
+    <section class="hero is-info">
+        <div class="hero-body" style="padding: 0.5rem 1.5rem;">
+            <div class="container">
+            <h1 class="title">
+                Agenda Entregas / Instalación 
+            </h1> 
+            </div>
+        </div>
+    </section>
+
+    <div class="select">
+        <select class="select" id="semanas_del_anio">
+            <option value="{{ semana.id }}" ng-repeat="semana in semanas"  ng-selected="{{semana.id == semana.select}}">Semana {{ semana.id }} - {{semana.descripcion }}</option>
+        </select>
+    </div>
+    <button type="button" class="button is-dark" ng-click="cambiar_semana()">Ir a Semana</button> 
+    <table class="table is-fullwidth is-striped">
+        <thead class="is-light">
+            <tr class="is-light">
+            <!--<th><abbr>#</abbr></th>-->
+            <th>FOLIO/FECHA</th>
+            <th><abbr>EMPRESA / DESCRIPCIÓN</abbr></th>
+            <th><abbr>PROGRAMACION</abbr></th>
+            <th>LUNES</th>
+            <th>MARTES</th>
+            <th>MIERCOLES</th>
+            <th>JUEVES</th>
+            <th>VIERNES</th>
+            <th>SABADO</th>
+            <th>DOMINGO</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr ng-if="cargando_lista"><td colspan="6"><i class="fa fa-cog fa-spin"></i> Cargando Consulta...</td></tr>
+            <tr ng-repeat="(key, listas) in lista | orderByValue" class="tabla_style" ng-if="!cargando_lista">
+                <!--<td>{{ listas.id }} </td>-->
+                <td ng-if="listas.empresa == 1">NP-{{ listas.folio.substring(1) | number}} <br>
+                    {{ listas.fecha }}<br>
+                    <button type="button" class="button is-link"  ng-click="ver_info(listas)"><i class="fa fa-info"></i></button>
+                    <!--<div ng-if="listas.fecha_programacion!=''">{{ listas.fecha_programacion }}</div>
+                    <div ng-if="listas.fecha_programacion == ''"> {{ listas.fecha_entrega }}</div>-->
+                </td>
+                <td ng-if="listas.empresa == 2">NPA-{{ listas.folio.substring(1) | number}} <br>
+                    {{ listas.fecha }}<br>
+                    <button type="button" class="button is-link"  ng-click="ver_info(listas)"><i class="fa fa-info"></i></button>
+                    <!--<div ng-if="listas.fecha_programacion!=''">{{ listas.fecha_programacion }}</div>
+                    <div ng-if="listas.fecha_programacion == ''"> {{ listas.fecha_entrega }}</div>-->
+                </td>
+                <td>
+                    {{ listas.nombre}}<br>
+                    - {{ listas.descripcion }}<br>
+                    <span ng-if="listas.gf_diseno == 0"><button type="button" class="button is-light" tittle="diseño"><i class="fa fa-apple"></i></button></span>
+                    <span ng-if="listas.gf_diseno == 1">
+                        <button type="button" class="button is-danger" ng-if="listas.diseno_gf !=2"><i class="fa fa-apple"></i></button>
+                        <button type="button" class="button is-success" ng-if="listas.diseno_gf ==2"><i class="fa fa-apple"></i></button>
+                    </span>
+
+                    <span ng-if="listas.gf_impresion == 0"><button type="button" class="button is-light"><i class="fa fa-print"></i></button></span>
+                    <span ng-if="listas.gf_impresion == 1">
+                        <button type="button" class="button is-danger" ng-if="listas.impresion_gf !=2"><i class="fa fa-print"></i></button>
+                        <button type="button" class="button is-success" ng-if="listas.impresion_gf ==2"><i class="fa fa-print"></i></button>
+                    </span>
+
+                    <span ng-if="listas.gf_preparacion == 0"><button type="button" class="button is-light"><i class="fa fa-wrench"></i></button></span>
+                    <span ng-if="listas.gf_preparacion == 1">
+                        <button type="button" class="button is-danger" ng-if="listas.preparacion_gf !=2"><i class="fa fa-wrench"></i></button>
+                        <button type="button" class="button is-success" ng-if="listas.preparacion_gf ==2"><i class="fa fa-wrench"></i></button>
+                    </span>
+
+                    <span ng-if="listas.gf_instalacion == 0"><button type="button" class="button is-light"><i class="fa fa-truck"></i></button></span>
+                    <span ng-if="listas.gf_instalacion == 1">
+                        <button type="button" class="button is-danger" ng-if="listas.instalacion_gf !=2"><i class="fa fa-truck"></i></button>
+                        <button type="button" class="button is-success" ng-if="listas.instalacion_gf ==2"><i class="fa fa-truck"></i></button>
+                    </span>
+                    
+                    <span ng-if="listas.gf_entrega == 0"><button type="button" class="button is-light"><i class="fa fa-shopping-bag"></i></button></span>
+                    <span ng-if="listas.gf_entrega == 1">
+                        <button type="button" class="button is-danger" ng-if="listas.entrega_gf !=2"><i class="fa fa-shopping-bag"></i></button>
+                        <button type="button" class="button is-success" ng-if="listas.entrega_gf ==2"><i class="fa fa-shopping-bag"></i></button>
+                    </span>
+                    <span ng-if="listas.gf_maquila == 0"><button type="button" class="button is-light"><i class="fa fa-file-image-o"></i></button></span>
+                    <span ng-if="listas.gf_maquila == 1">
+                        <button type="button" class="button is-danger" ng-if="listas.maquila_gf !=2"><i class="fa fa-file-image-o"></i></button>
+                        <button type="button" class="button is-success" ng-if="listas.maquila_gf ==2"><i class="fa fa-file-image-o"></i></button>
+                    </span>
+                </td>
+                
+                <td>
+                    <div ng-if="listas.semana_actual == 0">
+                        <input type="datetime-local" class="" value="{{ listas.fecha_format }}" id="{{listas.id}}"><br>
+                        <button type="button" class="button is-dark" ng-click="programar_tarea(listas.empresa, listas.id)"><i class="fa fa-clock-o"></i></button>
+                    </div>
+                </td>
+                <td>
+                    <div ng-if="listas.dia == 1 && listas.semana_actual == 1">
+                        <span class="tag is-danger" ng-if="listas.programado == 0">{{ listas.fecha_entrega}}</span>
+                        <span class="tag is-link" ng-if="listas.programado == 1">{{ listas.fecha_programacion}}</span>
+                        <br>
+                        
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="visualizar(listas.id)"><i class="fa fa-bars"></i></button>
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="programar(listas, key)"   ng-if="listas.programado == 0"><i class="fa fa-check"></i></button>
+                        
+                        <div  style="padding:3px;display:none" id="visualizar_{{listas.id}}">
+                            <input type="datetime-local" class="" value="{{ listas.fecha_format }}" id="{{listas.id}}"><br>
+                            <button type="button" class="button is-dark" ng-click="programar_tarea(listas.empresa, listas.id)"><i class="fa fa-clock-o"></i></button>
+                        </div>
+                    </div>
+                    <div ng-if="listas.dia != 1 || (listas.dia == 1 &&  listas.semana_actual == 0)">LUNES</div>
+                    
+                </td>
+                <td>
+                    <div ng-if="listas.dia == 2 && listas.semana_actual == 1">
+                        <span class="tag is-danger" ng-if="listas.programado == 0">{{ listas.fecha_entrega}}</span>
+                        <span class="tag is-link" ng-if="listas.programado == 1">{{ listas.fecha_programacion}}</span>
+                        <br>
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="visualizar(listas.id)"><i class="fa fa-bars"></i></button>
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="programar(listas, key)"  ng-if="listas.programado == 0"><i class="fa fa-check"></i></button>
+                        <div  style="padding:3px;display:none" id="visualizar_{{listas.id}}">
+                            <input type="datetime-local" class="" value="{{ listas.fecha_format }}" id="{{listas.id}}"><br>
+                            <button type="button" class="button is-dark" ng-click="programar_tarea(listas.empresa, listas.id)"><i class="fa fa-clock-o"></i></button>
+                        </div>    
+                    </div>
+                    <div ng-if="listas.dia != 2 || (listas.dia == 2 &&  listas.semana_actual == 0)">MARTES</div>
+                </td>
+                <td>
+                    <div ng-if="listas.dia == 3 && listas.semana_actual == 1">
+                        <span class="tag is-danger" ng-if="listas.programado == 0">{{ listas.fecha_entrega}}</span>
+                        <span class="tag is-link" ng-if="listas.programado == 1">{{ listas.fecha_programacion}}</span>
+                        <br>
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="visualizar(listas.id)"><i class="fa fa-bars"></i></button>
+                        <button type="button" class="button is-dark" style="height: 26px;"  ng-click="programar(listas, key)"  ng-if="listas.programado == 0"><i class="fa fa-check"></i></button>
+                        <div  style="padding:3px;display:none" id="visualizar_{{listas.id}}">
+                            <input type="datetime-local" class="" value="{{ listas.fecha_format }}" id="{{listas.id}}"><br>
+                            <button type="button" class="button is-dark" ng-click="programar_tarea(listas.empresa, listas.id)"><i class="fa fa-clock-o"></i></button>
+                        </div>
+                    </div>
+                    <div ng-if="listas.dia != 3|| (listas.dia == 3 &&  listas.semana_actual == 0)">MIERCOLES</div>
+                </td>
+                <td>
+                    <div ng-if="listas.dia == 4 && listas.semana_actual == 1">
+                        <span class="tag is-danger" ng-if="listas.programado == 0">{{ listas.fecha_entrega}}</span>
+                        <span class="tag is-link" ng-if="listas.programado == 1">{{ listas.fecha_programacion}}</span>
+                        <br>
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="visualizar(listas.id)"><i class="fa fa-bars"></i></button>
+                        <button type="button" class="button is-dark" style="height: 26px;"  ng-click="programar(listas, key)"  ng-if="listas.programado == 0"><i class="fa fa-check"></i></button>
+                        <div  style="padding:3px;display:none" id="visualizar_{{listas.id}}">
+                            <input type="datetime-local" class="" value="{{ listas.fecha_format }}" id="{{listas.id}}"><br>
+                            <button type="button" class="button is-dark" ng-click="programar_tarea(listas.empresa, listas.id)"><i class="fa fa-clock-o"></i></button>
+                        </div>
+                    </div>
+                    <div ng-if="listas.dia != 4 || (listas.dia == 4 &&  listas.semana_actual == 0)">JUEVES</div>
+                </td>
+                <td>
+                    <div ng-if="listas.dia == 5 && listas.semana_actual == 1">
+                        <span class="tag is-danger" ng-if="listas.programado == 0">{{ listas.fecha_entrega}}</span>
+                        <span class="tag is-link" ng-if="listas.programado == 1">{{ listas.fecha_programacion}}</span>
+                        <br>
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="visualizar(listas.id)"><i class="fa fa-bars"></i></button>
+                        <button type="button" class="button is-dark" style="height: 26px;"  ng-click="programar(listas, key)"  ng-if="listas.programado == 0"><i class="fa fa-check"></i></button>        
+                        <div  style="padding:3px;display:none" id="visualizar_{{listas.id}}">
+                            <input type="datetime-local" class="" value="{{ listas.fecha_format }}" id="{{listas.id}}"><br>
+                            <button type="button" class="button is-dark" ng-click="programar_tarea(listas.empresa, listas.id)"><i class="fa fa-clock-o"></i></button>
+                        </div>
+                    </div>
+                    <div ng-if="listas.dia != 5 || (listas.dia == 5 &&  listas.semana_actual == 0)">VIERNES</div>
+                </td>
+                <td>
+                    <div ng-if="listas.dia == 6 && listas.semana_actual == 1">
+                        <span class="tag is-danger" ng-if="listas.programado == 0">{{ listas.fecha_entrega}}</span>
+                        <span class="tag is-link" ng-if="listas.programado == 1">{{ listas.fecha_programacion}}</span>
+                        <br>
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="visualizar(listas.id)"><i class="fa fa-bars"></i></button>
+                        <button type="button" class="button is-dark" style="height: 26px;"  ng-click="programar(listas, key)"  ng-if="listas.programado == 0"><i class="fa fa-check"></i></button>
+                        <div  style="padding:3px;display:none" id="visualizar_{{listas.id}}">
+                            <input type="datetime-local" class="" value="{{ listas.fecha_format }}" id="{{listas.id}}"><br>
+                            <button type="button" class="button is-dark" ng-click="programar_tarea(listas.empresa, listas.id)"><i class="fa fa-clock-o"></i></button>
+                        </div>
+                    </div>
+                    <div ng-if="listas.dia != 6 || (listas.dia == 6 &&  listas.semana_actual == 0)">SABADO</div>
+                </td>
+                <td>
+                    <div ng-if="listas.dia == 7 && listas.semana_actual == 1">
+                        <span class="tag is-danger" ng-if="listas.programado == 0">{{ listas.fecha_entrega}}</span>
+                        <span class="tag is-link" ng-if="listas.programado == 1">{{ listas.fecha_programacion}}</span>
+                        <br>    
+                        <button type="button" class="button is-dark" style="height: 26px;" ng-click="visualizar(listas.id)"><i class="fa fa-bars"></i></button>
+                        <button type="button" class="button is-dark" style="height: 26px;"  ng-click="programar(listas, key)"  ng-if="listas.programado == 0"><i class="fa fa-check"></i></button>
+                        <div  style="padding:3px;display:none" id="visualizar_{{listas.id}}">
+                            <input type="datetime-local" class="" value="{{ listas.fecha_format }}" id="{{listas.id}}"><br>
+                            <button type="button" class="button is-dark" ng-click="programar_tarea(listas.empresa, listas.id)"><i class="fa fa-clock-o"></i></button>
+                        </div>
+                    </div>
+                    <div ng-if="listas.dia != 7 || (listas.dia == 7 &&  listas.semana_actual == 0)">DOMINGO</div>
+                </td>
+            </tr>        
+        </tbody>
+    </table> 
+    
+    <div class="modal" ng-class="{'is-active': show_modal_info}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="message-header" style="background-color:#209cee !important">
+                <p><b>Información</b></p>
+            </div>
+                <section class="modal-card-body">
+                    <div ng-if="cargando">
+                        <i class="fa fa-cog fa-spin"></i> Actualizando Datos</td>
+                    </div>
+                    <div ng-if="!cargando">
+                        <div class="field">
+                            <label class="label">Datos</label>
+                            Folio: {{ info.folio}}<br>
+                            Fecha: {{ info.fecha}}<br>
+                            Cliente: {{ info.nombre}}<br>
+                            Descripción: {{ info.descripcion}}<br>
+                        </div>  
+                        <table  class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Articulo / nota</th>
+                                    <th>Cantidad</th>                            
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key, detalles) in detalle">
+                                    <td>
+                                        {{ detalles.nombre_articulo }}
+                                        <div>{{ detalles.nota }}</div>
+                                    </td>
+                                    <td>
+                                        {{ detalles.cantidad | number : '2' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>   
+                    <br>
+                    <button class="button is-dark" ng-click="show_modal_info = !show_modal_info">Cerrar</button>
+                </section>
+                
+        </div>
+       <button class="modal-close is-large" aria-label="close"  ng-click="show_modal_info = !show_modal_info"></button>
+    </div> 
+</body>    

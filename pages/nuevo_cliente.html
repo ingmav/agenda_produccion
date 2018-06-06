@@ -1,0 +1,233 @@
+<style>
+    table{
+        font-size: 9pt;
+    }
+
+    label{
+        font-size: 10pt !important;
+    }
+</style>
+<body>
+    <section class="hero is-info">
+        <div class="hero-body" style="padding: 0.5rem 1.5rem;">
+            <div class="container">
+            <h1 class="title">
+                Master (Agregar Cliente) 
+            </h1> 
+            </div>
+        </div>
+    </section>
+    <!--<div class="tabs is-small">
+        <ul>
+            <li class="is-active"><a>Datos en General</a></li>
+            <li><a>Precios Especiales</a></li>
+            <li><a>Medidas</a></li>
+            <li><a>Lona-Vinil</a></li>
+            <li><a>Autos</a></li>
+            <li><a>Corte</a></li>
+        </ul>
+    </div>-->
+    <form novalidate>
+        <div class="columns">
+            <div class="column" style="padding:20px">
+                <div class="field">
+                    <label class="label">Nombre Empresa</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Empresa" ng-model="form_empresa.empresa">
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="columns">
+            <div class="column" style="padding:20px">
+                <div class="field">
+                    <a class="button is-primary is-fullwidth" ng-class="{'is-loading': cargando}"  ng-click="agregar(form_empresa)">AGREGAR</a>
+                </div>
+            </div>
+    </div> 
+    </form>                      
+            <!--<div class="field">
+                <label class="label">Razones Sociales <a class="button is-primary is-small is-outlined is-pulled-right" ng-click="open(1)"><i class="fa fa-plus is-pull-right"></i></a></label>
+                
+                <div class="control">
+                    <table class="table is-fullwidth is-bordered">
+                        <thead>
+                            <tr>
+                                <th>Razón Social</th>            
+                                <th>Dirección</th>            
+                                <th></th>            
+                            </tr>    
+                        </thead>
+                        <tbody>
+                            <tr ng-if="cargandoListaRazon"><td colspan='3'><i class="fa fa-cog fa-spin"></i>Actualizando Datos</td></tr>
+                            <tr ng-repeat="(key, item) in form.datos_generales.lista_razon" ng-if="!cargandoListaRazon">
+                                <td><b><a ng-click="editar(1, key)">{{ item.alias}}</a><br></b>{{ item.razon}}</td>
+                                <td>{{ item.direccion}}</td>
+                                <td><button type="button" class="button is-small is-danger" ng-click="eliminar(1, key)"><i class="fa fa-trash"></i></button></td>
+                            </tr>
+                            <tr ng-if="form.datos_generales.lista_razon.length == 0" ng-if="!cargandoListaRazon">
+                                <td colspan="3">No se encuentran registrados Razones Sociales</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>    
+            </div>
+
+            <div class="field">
+                <label class="label">Método de Pago <a class="button is-primary is-small is-outlined is-pulled-right" ng-click="open(2)"><i class="fa fa-plus is-pull-right"></i></a></label>
+                <div class="control">
+                    <table class="table is-fullwidth is-bordered">
+                        <thead>
+                            <tr>
+                                <th>Razón Social (alias)</th>            
+                                <th>Metodo</th>            
+                                <th>Política de pago</th>  
+                                <th></th>          
+                            </tr>    
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="(key, item) in form.datos_generales.lista_metodo">
+                                <td><b><a ng-click="editar(2, key)"><b>{{ item.razon }}</b></a></td>
+                                <td>{{ catalogo.metodos_pago[item.metodo].descripcion}}</td>
+                                <td>{{ item.politica}}</td>
+                                <td><button type="button" class="button is-small is-danger" ng-click="eliminar(2, key)"><i class="fa fa-trash"></i></button></td>
+                            </tr>
+                            <tr ng-if="form.datos_generales.lista_metodo.length == 0">
+                                <td colspan="4">No se encuentran registrados los metodos de pago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>    
+            </div>
+
+            <div class="field">
+                    <label class="label">Páginas Web <a class="button is-primary is-small is-outlined is-pulled-right"><i class="fa fa-plus is-pull-right"></i></a></label>
+                    <div class="control">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th>URL</th>            
+                                    <th>USUARIO</th>            
+                                    <th>CONTRASEÑA</th>            
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No se encuentran registrados Páginas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>
+        </div>
+        <div class="column" style="padding:20px">
+            <div class="field">
+                <label class="label">Contactos <a class="button is-primary is-small is-outlined is-pulled-right"><i class="fa fa-plus is-pull-right"></i></a></label>
+                <div class="control">
+                    <table class="table is-fullwidth is-bordered">
+                        <thead>
+                            <tr>
+                                <th>Datos</th>                     
+                            </tr>    
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>No se encuentran registrados Contactos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>    
+            </div>
+        </div>
+    </div>  
+    <div class="modal" ng-class="{'is-active': show_modal_razon}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="message-header" style="background-color:#209cee !important">
+                <p><b>Razón Social</b></p>
+            </div>
+            <form novalidate>
+                <input class="input" type="hidden" placeholder="Alias" ng-model="form_razon.id">
+                <section class="modal-card-body">
+                    <div class="field">
+                        <label class="label">Alias</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Alias" ng-model="form_razon.alias">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Razón Social</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Razón Social" ng-model="form_razon.razon">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Dirección</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Dirección"  ng-model="form_razon.direccion">
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link" ng-click="agregar_razon(form_razon)">Agregar</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-text" ng-click="show_modal_razon=!show_modal_razon">Cancelar</button>
+                        </div>
+                    </div>
+                </section>
+            </form>    
+        </div>
+        <button class="modal-close is-large" aria-label="close" ng-click="show_modal_razon = false"></button>
+    </div>
+
+    <div class="modal" ng-class="{'is-active': show_modal_metodo}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="message-header" style="background-color:#209cee !important">
+                <p><b>Metodo de pago</b></p>
+            </div>
+            <form novalidate>
+                <section class="modal-card-body">
+                    <div class="field">
+                        <label class="label">Razón social (Alias)</label>
+                        <div class="control">
+                            <div class="select">
+                                <select class="select" ng-model="form_metodo.razon" >
+                                    <option ng-repeat="item in form.datos_generales.lista_razon" value="{{ item.id }}">{{ item.alias }}</option>
+                                </select>
+                            </div>    
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Metodo de pago</label>
+                        <div class="control">
+                            <div class="select">    
+                                <select class="select" ng-model="form_metodo.metodo">
+                                    <option ng-repeat="item in catalogo.metodos_pago" value="{{ item.id }}">{{ item.descripcion }}</option>
+                                </select>
+                            </div>    
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Política de Pago</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Política de pago"  ng-model="form_metodo.politica">
+                        </div>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link" ng-click="agregar_metodo(form_metodo)">Agregar</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-text" ng-click="show_modal_METODO=false">Cancelar</button>
+                        </div>
+                    </div>
+                </section>
+            </form>    
+        </div>
+        <button class="modal-close is-large" aria-label="close" ng-click="show_modal_metodo = false"></button>
+    </div>-->
+</body>    

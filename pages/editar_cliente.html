@@ -1,0 +1,576 @@
+<style>
+    table{
+        font-size: 9pt;
+    }
+
+    label{
+        font-size: 10pt !important;
+    }
+</style>
+<body>
+    <section class="hero is-info">
+        <div class="hero-body" style="padding: 0.5rem 1.5rem;">
+            <div class="container">
+            <h1 class="title">
+                Master Clientes {{ form_general.empresa }}
+            </h1> 
+            </div>
+        </div>
+    </section>
+    <div class="tabs">
+        <ul>
+            <li ng-class="{'is-active': tab_master == 1 }" ng-click="tab(1)"><a>Datos en General</a></li>
+            <li ng-class="{'is-active': tab_master == 2 }" ng-click="tab(2)"><a>Precios Especiales</a></li>
+            <li ng-class="{'is-active': tab_master == 3 }" ng-click="tab(3)"><a>Medidas</a></li>
+            <li ng-class="{'is-active': tab_master == 4 }" ng-click="tab(4)"><a>Lona-Vinil</a></li>
+            <li ng-class="{'is-active': tab_master == 5 }" ng-click="tab(5)"><a>Autos</a></li>
+            <li ng-class="{'is-active': tab_master == 6 }" ng-click="tab(6)"><a>Corte</a></li>
+        </ul>
+    </div>
+
+    <div ng-if="tab_master == 1">    
+        <div class="columns">
+            <div class="column" style="padding:20px">
+                <div class="field">
+                    <label class="label">Nombre Empresa</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Empresa" ng-model="form_general.empresa" ng-readonly="true">
+                    </div>
+                </div>
+                    
+                <div class="field">
+                    <label class="label">Razones Sociales <a class="button is-primary is-outlined is-pulled-right" ng-click="open(1)"><i class="fa fa-plus is-pull-right"></i></a></label>
+                    
+                    <div class="control">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Razón Social</th>            
+                                    <th>Dirección</th>            
+                                    <th></th>            
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                <tr ng-if="cargandoListaRazon"><td colspan='3'><i class="fa fa-cog fa-spin"></i>Actualizando Datos</td></tr>
+                                <tr ng-repeat="(key, item) in form_general.razon" ng-if="!cargandoListaRazon">
+                                    <td><b><a ng-click="editar(1, key)">{{ item.alias}}</a><br></b>{{ item.razon_social}}</td>
+                                    <td>{{ item.direccion}}</td>
+                                    <td><button type="button" class="button is-danger" ng-click="eliminar(1, key, item.id )"><i class="fa fa-trash"></i></button></td>
+                                </tr>
+                                <tr ng-if="form_general.razon.length == 0" ng-if="!cargandoListaRazon">
+                                    <td colspan="3">No se encuentran registrados Razones Sociales</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>
+
+                <div class="field">
+                    <label class="label">Método de Pago <a class="button is-primary is-outlined is-pulled-right" ng-click="open(2)"><i class="fa fa-plus is-pull-right"></i></a></label>
+                    <div class="control">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Razón Social (alias)</th>            
+                                    <th>Metodo</th>            
+                                    <th>Política de pago</th>  
+                                    <th></th>          
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                <tr ng-if="cargandoListaMetodo"><td colspan='4'><i class="fa fa-cog fa-spin"></i>Actualizando Datos</td></tr>
+                                <tr ng-repeat="(key, item) in form_general.pago">
+                                    <td><b><a ng-click="editar(2, key)"><b>{{ item.razon_social }}</b></a></td>
+                                    <td>{{ catalogo.metodos_pago[item.id_metodo_pago-1].descripcion}}</td>
+                                    <td>{{ item.politica_pago}}</td>
+                                    <td><button type="button" class="button is-danger" ng-click="eliminar(2, key, item.id)"><i class="fa fa-trash"></i></button></td>
+                                </tr>
+                                <tr ng-if="form_general.pago.length == 0">
+                                    <td colspan="4">No se encuentran registrados los metodos de pago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>
+
+                <div class="field">
+                    <label class="label">Páginas Web <a class="button is-primary is-outlined is-pulled-right" ng-click="open(3)"><i class="fa fa-plus is-pull-right"></i></a></label>
+                    <div class="control">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th>URL</th>            
+                                    <th>USUARIO</th>            
+                                    <th>CONTRASEÑA</th>            
+                                    <th></th>            
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                <tr ng-if="cargandoListaPagina"><td colspan='4'><i class="fa fa-cog fa-spin"></i>Actualizando Datos</td></tr>
+                                <tr ng-repeat="(key, item) in form_general.pagina" ng-if="!cargandoListaPagina">
+                                    <td><b><a ng-click="editar(3, key)"><b>{{ item.link }}</b></a></td>
+                                    <td>{{ item.usuario }}</td>
+                                    <td>{{ item.contrasena}}</td>
+                                    <td><button type="button" class="button is-danger" ng-click="eliminar(3, key, item.id)"><i class="fa fa-trash"></i></button></td>
+                                </tr>
+                                <tr ng-if="form_general.pagina.length == 0 && !cargandoListaPagina">
+                                    <td colspan="4">No se encuentran registrados Páginas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>
+            </div>
+            <div class="column" style="padding:20px">
+                <div class="field">
+                    <label class="label">Contactos <a class="button is-primary is-outlined is-pulled-right" ng-click="open(4)"><i class="fa fa-plus is-pull-right"></i></a></label>
+                    <div class="control">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="4">Datos</th>                     
+                                </tr>    
+                                <tr>
+                                    <th>Nombre / Puesto / Teléfono(s) / Correo(s)</th>                     
+                                    <!--<th>Correo(s)</th>-->
+                                    <th>Cobranza</th>                     
+                                    <th></th>                                        
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                <tr ng-if="cargandoListaContacto"><td colspan='1'><i class="fa fa-cog fa-spin"></i>Actualizando Datos</td></tr>
+                                <tr ng-repeat="(key, item) in form_general.contacto" ng-if="!cargandoListaContacto">
+                                    <td>
+                                        <b><a ng-click="editar(4, key)"><b>{{ item.nombre }} / {{ item.puesto }} / {{ item.razon }}</b></a><br>
+                                        <!--<div>{{ item.puesto }}</div>-->
+                                        
+                                        <!--<div>{{ item.razon }}</div>-->
+                                        <div>{{ item.correo}}</div>
+                                        <div>{{ item.correo_alterno}}</div>
+                                        <div>{{ item.telefono_fijo}}</div>
+                                        <div>{{ item.celular}}</div>
+                                    <!--</td>
+                                    <td>-->
+                                        
+                                    </td>
+                                    <td><div ng-if='item.id_cobranza == 1'>SI</div><div ng-if='item.id_cobranza == 2'>NO</div></td>
+                                    <td><button type="button" class="button is-danger" ng-click="eliminar(4, key, item.id)"><i class="fa fa-trash"></i></button></td>
+                                    
+                                </tr>    
+                                <tr ng-if="form_general.contacto.length == 0 && !cargandoListaContacto">
+                                    <td colspan="4">No se encuentran registrados Contactos</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>
+                <div class="field">
+                    <label class="label">Procedimiento de Pago <a class="button is-primary is-outlined is-pulled-right" ng-click="open(5)"><i class="fa fa-plus is-pull-right"></i></a></label>
+                    <div class="control">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="4">Procedimiento</th>                     
+                                </tr>    
+                                
+                            </thead>
+                            <tbody>
+                                <tr ng-if="cargandoListaProcedimiento"><td colspan='1'><i class="fa fa-cog fa-spin"></i>Actualizando Datos</td></tr>
+                                <tr ng-repeat="(key, item) in form_general.procedimiento_pago" ng-if="!cargandoListaProcedimiento">
+                                    <td>
+                                        <b><a ng-click="editar(5, key)"><b>{{ item.titulo }}</b></a><br>
+                                        {{ item.descripcion }}
+                                    </td>
+                                    <td><button type="button" class="button is-danger" ng-click="eliminar(5, key, item.id)"><i class="fa fa-trash"></i></button></td>
+                                    
+                                </tr>    
+                                <tr ng-if="form_general.procedimiento_pago.length == 0 && !cargandoListaProcedimiento">
+                                    <td colspan="4">No se encuentran registrados Procesos de pago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>
+            </div>
+        </div>  
+        <div class="modal" ng-class="{'is-active': show_modal_razon}">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="message-header" style="background-color:#209cee !important">
+                    <p><b>Razón Social</b></p>
+                </div>
+                <form novalidate>
+                    <input class="input" type="hidden" placeholder="Alias" ng-model="form_razon.id">
+                    <section class="modal-card-body">
+                        <div class="field">
+                            <label class="label">Alias</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Alias" ng-model="form_razon.alias">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Razón Social</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Razón Social" ng-model="form_razon.razon_social">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Dirección</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Dirección"  ng-model="form_razon.direccion">
+                            </div>
+                        </div>
+
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" ng-click="agregar_razon(form_razon)">Agregar</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-text" ng-click="reset_params()">Cancelar</button>
+                            </div>
+                        </div>
+                    </section>
+                </form>    
+            </div>
+            <button class="modal-close is-large" aria-label="close" ng-click="reset_params()"></button>
+        </div>
+
+        <div class="modal" ng-class="{'is-active': show_modal_metodo}">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="message-header" style="background-color:#209cee !important">
+                    <p><b>Metodo de pago</b></p>
+                </div>
+                <form novalidate>
+                    <input class="input" type="hidden" ng-model="form_metodo.id">
+                    <section class="modal-card-body">
+                        <div class="field">
+                            <label class="label">Razón social (Alias)</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select class="select" ng-model="form_metodo.id_razon_social" ng-options="opt as opt.alias for opt in form_general.razon">
+                                        <!--<option ng-repeat="item in form_general.razon" value="{{ item.id }}" ng-selected="true">{{ item.alias }}</option>-->
+                                    </select>
+                                    <!--<input class="input" type="input" ng-model="form_metodo.texto_razon">-->
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Metodo de pago</label>
+                            <div class="control">
+                                <div class="select">    
+                                    <select class="select" ng-model="form_metodo.id_metodo_pago"  ng-options="opt as opt.descripcion for opt in catalogo.metodos_pago">
+                                        <!--<option ng-repeat="item in catalogo.metodos_pago" value="{{ item.id }}">{{ item.descripcion }}</option>-->
+                                    </select>
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Política de Pago</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Política de pago"  ng-model="form_metodo.politica_pago">
+                            </div>
+                        </div>
+
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" ng-click="agregar_metodo(form_metodo)">Agregar</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-text" ng-click="reset_params()">Cancelar</button>
+                            </div>
+                        </div>
+                    </section>
+                </form>    
+            </div>
+            <button class="modal-close is-large" aria-label="close" ng-click="reset_params()"></button>
+        </div>
+
+        <div class="modal" ng-class="{'is-active': show_modal_pagina}">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="message-header" style="background-color:#209cee !important">
+                    <p><b>Página Web</b></p>
+                </div>
+                <form novalidate>
+                    <input class="input" type="hidden" placeholder="Alias" ng-model="form_pagina.id">
+                    <section class="modal-card-body">
+                        <div class="field">
+                            <label class="label">Link (url)</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="URL" ng-model="form_pagina.link">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Usuario</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Usuario" ng-model="form_pagina.usuario">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Contraseña</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="contraseña"  ng-model="form_pagina.contrasena">
+                            </div>
+                        </div>
+
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" ng-click="agregar_pagina(form_pagina)">Agregar</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-text" ng-click="reset_params()">Cancelar</button>
+                            </div>
+                        </div>
+                    </section>
+                </form>    
+            </div>
+            <button class="modal-close is-large" aria-label="close" ng-click="reset_params()"></button>
+        </div>
+
+        <div class="modal" ng-class="{'is-active': show_modal_contacto}">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="message-header" style="background-color:#209cee !important">
+                    <p><b>Contacto</b></p>
+                </div>
+                <form novalidate>
+                    <input class="input" type="hidden" placeholder="Alias" ng-model="form_contacto.id">
+                    <section class="modal-card-body">
+                        <div class="field">
+                            <label class="label">Razón social (Alias)</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select class="select" ng-model="form_contacto.id_razon_social" ng-options="opt as opt.alias for opt in form_general.razon">
+                                    </select>
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Nombre</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Nombre" ng-model="form_contacto.nombre">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Puesto</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Puesto" ng-model="form_contacto.puesto">
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Teléfono Fijo</label>
+                                    <div class="control">
+                                        <input class="input" type="text" placeholder="Teléfono"  ng-model="form_contacto.telefono_fijo">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Celular</label>
+                                    <div class="control">
+                                        <input class="input" type="text" placeholder="Celular"  ng-model="form_contacto.celular">
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>    
+                       
+                        <div class="field">
+                            <label class="label">Correo</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Correo"  ng-model="form_contacto.correo">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Correo Alterno</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Correo Alterno"  ng-model="form_contacto.correo_alterno">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Cobranza</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select class="select" ng-model="form_contacto.cobranza" ng-options="opt as opt.descripcion for opt in catalogo.cobranza">
+                                    </select>
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" ng-click="agregar_contacto(form_contacto)">Agregar</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-text" ng-click="reset_params()">Cancelar</button>
+                            </div>
+                        </div>
+                    </section>
+                </form>    
+            </div>
+            <button class="modal-close is-large" aria-label="close" ng-click="reset_params()"></button>
+        </div>
+    </div>
+
+    <div class="modal" ng-class="{'is-active': show_modal_procedimiento}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="message-header" style="background-color:#209cee !important">
+                <p><b>Proceso de Pago</b></p>
+            </div>
+            <form novalidate>
+                <input class="input" type="hidden" placeholder="Alias" ng-model="form_procedimiento.id">
+                <section class="modal-card-body">
+                    <div class="field">
+                        <label class="label">Titulo</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Titulo" ng-model="form_procedimiento.titulo">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Descripción</label>
+                        <div class="control">
+                            <textarea class="textarea" style="resize: none;" rows="7" placeholder="Descripción" ng-model="form_procedimiento.descripcion"></textarea>
+                            <!--<input class="input" type="text" placeholder="Descripción" ng-model="form_procedimiento.descripcion">-->
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link" ng-click="agregar_procedimiento(form_procedimiento)">Agregar</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-text" ng-click="reset_params()">Cancelar</button>
+                        </div>
+                    </div>
+                </section>
+            </form>    
+        </div>
+        <button class="modal-close is-large" aria-label="close"  ng-click="reset_params()"></button>
+    </div>
+    <div ng-if="tab_master==2">
+        
+        <div class="level-right"><a class="button is-primary is-outlined " ng-click="open(6)"><i class="fa fa-plus is-pull-right"></i> AGREGAR</a></div>
+        <div class="is-clearfix"></div>
+        <div class="columns is-clearfix">
+            <div class="column" style="padding:20px">
+                <div class="field">    
+                    <label class="label">Precios Especiales en Materiales </label>
+                    <div class="control">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Material</th>            
+                                    <th>Precio</th>            
+                                    <th>Descripcion</th>            
+                                    <th></th>            
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                <tr ng-if="cargandoListaPrecios"><td colspan='4'><i class="fa fa-cog fa-spin"></i>Actualizando Datos</td></tr>
+                                <tr ng-repeat="(key, item) in form_general.precio_especial.articulos" ng-if="!cargandoListaPrecios">
+                                    <td><b><a ng-click="editar(6, key, item)"><b>{{ item.nombre_articulo }}</b></a></td>
+                                    <td>{{ item.precio_x_m2 | currency }}</td>
+                                    <td>{{ item.observaciones}}</td>
+                                    <td><button type="button" class="button is-danger" ng-click="eliminar(6, key, item)"><i class="fa fa-trash"></i></button></td>
+                                </tr>
+                                <tr ng-if="form_general.precio_especial.articulos.length == 0 && !cargandoListaPrecios">
+                                    <td colspan="4">No se encuentran registrados Artículos Especiales</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>    
+            </div>
+            <div class="column" style="padding:20px">
+                <div class="field">    
+                    <label class="label">Servicios Especiales</label>
+                    <div class="control">
+                        <table class="table is-fullwidth is-bordered">
+                            <thead>
+                                <tr>
+                                    <th>SERVICIO</th>            
+                                    <th>DESCRIPCIÓN</th>             
+                                    <th></th>            
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                <tr ng-if="cargandoListaPrecios"><td colspan='4'><i class="fa fa-cog fa-spin"></i>Actualizando Datos</td></tr>
+                                <tr ng-repeat="(key, item) in form_general.precio_especial.servicios" ng-if="!cargandoListaPrecios">
+                                    <td><b><a ng-click="editar(6, key, item)"><b>{{ item.nombre_articulo }}</b></a></td>
+                                    <td>{{ item.observaciones}}</td>
+                                    <td><button type="button" class="button is-danger" ng-click="eliminar(6, key, item)"><i class="fa fa-trash"></i></button></td>
+                                </tr>
+                                <tr ng-if="form_general.precio_especial.servicios.length == 0 && !cargandoListaPrecios">
+                                    <td colspan="4">No se encuentran registrados Servicios Especiales</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>    
+            </div>
+        </div> 
+        <div class="modal" ng-class="{'is-active': show_modal_precios}">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="message-header" style="background-color:#209cee !important">
+                    <p><b>Precios Especiales</b></p>
+                </div>
+                <form novalidate>
+                    <input class="input" type="hidden" placeholder="Alias" ng-model="form_precios.id">
+                    <section class="modal-card-body">
+                        <div class="field">
+                            <label class="label">Tipo</label>
+                            <div class="select">
+                                <select class="select" ng-model="form_precios.id_tipo_precio" ng-options="opt as opt.descripcion for opt in catalogo.tipo_precios">
+                                </select>
+                            </div> 
+                        </div>
+                        
+                        <div class="field" ng-if="form_precios.id_tipo_precio.id == 1">
+                            <label class="label">Nombre del Artículo</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Titulo" ng-model="form_precios.nombre_articulo">
+                            </div>
+                        </div>
+                        <div class="field" ng-if="form_precios.id_tipo_precio.id == 2">
+                            <label class="label">Servicio</label>
+                            <div class="select">
+                                <select class="select" ng-model="form_precios.servicio" ng-options="opt as opt.descripcion for opt in catalogo.servicio">
+                                </select>
+                            </div> 
+                        </div>
+                        <div class="field" ng-if="form_precios.id_tipo_precio.id == 1">
+                            <label class="label">Precio x M<sup>2</sup></label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Titulo" ng-model="form_precios.precio_x_m2">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Descripción</label>
+                            <div class="control">
+                                <textarea class="textarea" style="resize: none;" rows="4" placeholder="Descripción" ng-model="form_precios.observaciones"></textarea>
+                                <!--<input class="input" type="text" placeholder="Descripción" ng-model="form_procedimiento.descripcion">-->
+                            </div>
+                        </div>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" ng-click="agregar_precios(form_precios)">Agregar</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-text" ng-click="reset_params()">Cancelar</button>
+                            </div>
+                        </div>
+                    </section>
+                </form>    
+            </div>
+            <button class="modal-close is-large" aria-label="close" ng-click="reset_params()"></button>
+        </div>       
+    </div>    
+    <div ng-if="tab_master==3">3</div>    
+    <div ng-if="tab_master==4">4</div>    
+    <div ng-if="tab_master==5">5</div>    
+    <div ng-if="tab_master==6">6</div>    
+
+    
+</body>    
